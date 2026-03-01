@@ -1,6 +1,5 @@
 mouse_init macro
   xor ax 
-  mov bx, 06h ; 6 button
   int 33h
   test ax, ax
   ; show cursor

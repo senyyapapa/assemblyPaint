@@ -13,7 +13,7 @@ start:
 	mov ax, DSEG
 	mov ds, ax
 
-  ; initialize mouse with 6 buttons and activate video mode
+  ; initialize mouse with and activate video mode
   mouse_init
   video_init ; 640x480x16
   
