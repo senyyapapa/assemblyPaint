@@ -4,8 +4,6 @@ CSEG segment
     ; То чтобы максимум сэкономить места, то мы помещаем в аргумент сразу 2 переменные 
     ARG @@count_size:WORD, @@x:WORD, @@padding:WORD
 
-    ; TODO: Create logic for creating palette
-
     push bp
     mov bp, sp
     pusha
