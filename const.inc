@@ -1,0 +1,25 @@
+; Workspace parameters
+WORKSPACE_X equ 0
+WORKSPACE_Y equ 0
+WORKSPACE_W equ 250
+WORKSPACE_H equ 200
+
+; Palette parameters
+PALETTE_X equ 263
+PALETTE_Y equ 0
+PALETTE_W equ 320
+PALETTE_H equ 200
+PALETTE_COLOR equ 15
+
+COLOR_X equ 270
+COLOR_BOX equ 16
+BOX_PADDING equ 8
+COLOR_COUNT equ 8
+
+; TOOLBAR parameters
+TOOLBAR_X equ 253
+TOOLBAR_Y equ 0
+TOOLBAR_W equ 262
+TOOLBAR_H equ 20
+
+KEY_ESC equ 18h ; Esc cup
