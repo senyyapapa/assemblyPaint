@@ -9,7 +9,26 @@ CSEG segment
   SetVideoMode endp
 
   ClearScreen proc NEAR
-    ; TODO: There will logic for clear workspace
+    pusha
+    mov ax, 0A000h
+    mov es, ax
+    xor di, di
+
+    cld
+    mov al, 0
+    mov dx, 200
+
+    ClearRow:
+      mov cx, 250
+      rep stosb
+
+      add, di, 70
+      dec dx
+      jnz ClearRow
+
+      popa 
+      ret
+
   ClearScreen endp
 
 CSEG ends
