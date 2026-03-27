@@ -1,12 +1,79 @@
+.286
+DSEG segment PUBLIC 'DATA'
+  EXTRN current_x:WORD
+  EXTRN current_y:WORD
+  EXTRN current_color:BYTE
+
+  EXTRN prev_x:WORD
+  EXTRN prev_y:WORD 
+  EXTRN is_pressed:BYTE
+
+DSEG ends
 CSEG segment PUBLIC 'CODE'
-  assume cs:CSEG
+  assume cs:CSEG, ds:DSEG
+  INCLUDE macros.inc
+  INCLUDE const.inc
 
   PUBLIC InitMouse
+  PUBLIC MouseHandler
 
   InitMouse proc
     mov ax, 00h
     int 33h
     ret
   InitMouse endp
+
+  MouseHandler proc FAR
+    push ds
+    mov ax, DSEG
+    mov ds, ax
+    pusha
+
+    shr cx, 1
+
+    test bx, 02h
+    jnz @@RightClick
+
+    test bx, 01h
+    jz @@LeftClick
+
+
+    jmp @@LeftClick
+    
+    @@LeftClick:
+      cmp cx, 259
+      ja @@exitf
+
+      mov [current_x], cx
+      mov [current_y], dx
+      DrawPixel
+      jmp @@exitf
+
+    @@RightClick:
+      cmp cx, 260
+      jb @@exitf
+
+      mov ax, 02h
+      int 33h
+
+      mov ax, dx
+      mov si, 320
+      mul si
+      add ax, cx
+      mov bx, ax
+      mov si, 0A000h
+      mov es, si
+      mov al, es:[bx]
+      mov byte ptr [current_color], al
+
+      mov ax, 01h
+      int 33h
+      jmp @@exitf
+
+  @@exitf:
+    popa
+    pop ds
+    retf
+  MouseHandler endp
 CSEG ends
 end

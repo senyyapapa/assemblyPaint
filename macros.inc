@@ -20,3 +20,31 @@ DrawPaletteBorder macro
     loop DrawVertLine
   popa
 endm
+
+GetMouseState macro
+    mov ax, 0Ch
+    mov dx, offset MouseHandler
+    mov bx, cs
+    mov es, bx
+    mov cx, 001010b
+    int 33h
+endm
+
+DrawPixel macro
+  pusha
+  mov ax, 0A000h
+  mov es, ax
+
+  mov ax, [current_y]
+  mov bx, ax
+  mov di, [current_x]
+  
+  shl ax, 8
+  shl bx, 6
+  add bx, ax
+  add di, bx
+  mov al, [current_color]
+  mov es:[di], al
+  popa
+endm
+

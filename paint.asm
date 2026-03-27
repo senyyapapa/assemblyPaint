@@ -1,21 +1,25 @@
 .286
 SSEG segment stack
-  db 256 dup(0)
+  db 512 dup(0)
 SSEG ends
 
-DSEG segment
-  INCLUDE const.inc
+DSEG segment PUBLIC 'DATA'
+  current_x dw 0
+  current_y dw 0
+  current_color db 15
 
-  ; color_padding_y db 8
-  ; color_padding_x db 22
-  ;
-  ; PUBLIC color_padding_y
-  ; PUBLIC color_padding_x
+  prev_x dw 0
+  prev_y dw 0
+  is_pressed db 0
+
+  PUBLIC current_x, current_y, current_color
+  PUBLIC prev_x, prev_y, is_pressed
 DSEG ends
 
 CSEG segment
   assume cs:CSEG, ds:DSEG, ss:SSEG
 
+  INCLUDE const.inc
   INCLUDE macros.inc
 
   ; Using all proc
@@ -23,6 +27,7 @@ CSEG segment
   EXTRN SetVideoMode:NEAR
   EXTRN ClearScreen:NEAR
   EXTRN DrawPalette:NEAR
+  EXTRN MouseHandler:FAR
 
 start: 
   mov ax, DSEG
@@ -31,7 +36,8 @@ start:
   call InitMouse
   cmp ax, 0000h
   je exit
-  
+
+  GetMouseState
   call SetVideoMode
   call ClearScreen
   DrawPaletteBorder
@@ -51,6 +57,10 @@ main_loop:
   jmp main_loop
 
 exit:
+  mov ax, 0Ch
+  xor cx, cx
+  xor dx, dx
+  int 33h
   mov ax, 0003h
   int 10h
   
