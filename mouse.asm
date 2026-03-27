@@ -9,3 +9,4 @@ CSEG segment PUBLIC 'CODE'
     ret
   InitMouse endp
 CSEG ends
+end
