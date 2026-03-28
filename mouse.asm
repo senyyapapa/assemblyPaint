@@ -35,10 +35,10 @@ CSEG segment PUBLIC 'CODE'
     jnz @@RightClick
 
     test bx, 01h
-    jz @@LeftClick
+    jnz @@LeftClick
 
-
-    jmp @@LeftClick
+    
+    jmp @@exitf
     
     @@LeftClick:
       cmp cx, 259

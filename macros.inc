@@ -26,7 +26,7 @@ GetMouseState macro
     mov dx, offset MouseHandler
     mov bx, cs
     mov es, bx
-    mov cx, 001010b
+    mov cx, 001011b
     int 33h
 endm
 
