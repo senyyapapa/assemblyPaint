@@ -24,6 +24,7 @@ DSEG segment PUBLIC 'DATA'
   PUBLIC prev_x, prev_y, is_pressed
   PUBLIC width_brush
   PUBLIC rectangle_w, rectangle_h, rectangle_fill, rectangle_draw
+
 DSEG ends
 
 CSEG segment

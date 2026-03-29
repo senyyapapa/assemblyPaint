@@ -11,6 +11,7 @@ DSEG segment PUBLIC 'DATA'
 DSEG ends
 CSEG segment PUBLIC 'CODE'
   assume cs:CSEG, ds:DSEG
+  INCLUDE const.inc
   
   PUBLIC SetVideoMode
   PUBLIC ClearScreen
@@ -36,13 +37,13 @@ CSEG segment PUBLIC 'CODE'
 
     cld
     mov ax, 0
-    mov dx, 200
+    mov dx, WORKSPACE_HEIGHT
 
     ClearRow:
-      mov cx, 250
+      mov cx, WORKSPACE_WIDTH
       rep stosb
 
-      add di, 70
+      add di, 320 - WORKSPACE_WIDTH
       dec dx
       jnz ClearRow
 
@@ -58,32 +59,58 @@ CSEG segment PUBLIC 'CODE'
     
     mov ax, 0A000h
     mov es, ax
-    
+
+    mov ax, [current_x]
+    add ax, [rectangle_w] ; x + rectangle_w ex: 250 + 150
+    cmp ax, WORKSPACE_WIDTH
+    ja @@SetValue 
+
     mov ax, [current_y]
     mov di, [current_x]
     mov bx, ax
+    mov dx, [rectangle_w]
 
-    shl ax, 8
-    shl bx, 6
-    add bx, ax
-    add di, bx
+    @@GetOffset:
+      shl ax, 8
+      shl bx, 6
+      add bx, ax
+      add di, bx
 
     mov bx, [rectangle_h]
     mov al, [current_color]
     
     @@DrawRow:
-      mov cx, [rectangle_w]
+      mov cx, dx
       rep stosb
 
-      add di, 320
-      sub di, [rectangle_w]
+      add di, 320 
+      sub di, dx
 
       dec bx
       jnz @@DrawRow
+      jmp @@exit
+
+    @@SetValue:
+      mov bx, ax ; bx = x + rectangle_w ex: 250 + 150
+      sub bx, WORKSPACE_WIDTH ; bx = 400 - 259 = 141 
+      mov ax, [rectangle_w]
+      sub ax, bx ; ax = rectagle_w - our_diff = 150 - 141 = 9
+      jz @@exit
+
+      mov cx, ax
+      mov dx, ax
+
+      mov ax, [current_y]
+      mov di, [current_x]
+      mov bx, ax
+      jmp @@GetOffset
+
+
     
-    mov [rectangle_draw], 0
-    popa
-    ret
+    @@exit:
+      mov [rectangle_draw], 0
+      popa
+      ret
   DrawRectangle endp
 
 CSEG ends
