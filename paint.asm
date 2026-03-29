@@ -74,17 +74,23 @@ main_loop:
   cmp al, 1Bh
   je exit
 
-  cmp al, 63h
+  cmp al, 63h ; c
   je @@clear_screen
 
-  cmp al, 43h
+  cmp al, 43h ; C
   je @@clear_screen
 
-  cmp al, 50h
+  cmp al, 50h ; P
   je @@draw_rectangle
 
-  cmp al, 70h
+  cmp al, 70h ; p
   je @@draw_rectangle
+
+  cmp al, 75h ; u
+  je @@draw_unfilled_rectangle
+
+  cmp al, 55h ; U
+  je @@draw_unfilled_rectangle
 
   cmp al, '1'
   jb main_loop
@@ -105,6 +111,15 @@ main_loop:
   jnz main_loop
 
   mov [rectangle_draw], 1 
+  mov [rectangle_fill], 1
+  jmp main_loop
+
+@@draw_unfilled_rectangle:
+  test [rectangle_draw], 1
+  jnz main_loop
+
+  mov [rectangle_draw], 1 
+  mov [rectangle_fill], 0
   jmp main_loop
 
 exit:

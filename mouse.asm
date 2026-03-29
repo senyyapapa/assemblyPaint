@@ -11,6 +11,7 @@ DSEG segment PUBLIC 'DATA'
   EXTRN width_brush:WORD
 
   EXTRN rectangle_draw:BYTE
+  EXTRN rectangle_fill:BYTE
 
 DSEG ends
 CSEG segment PUBLIC 'CODE'
@@ -19,6 +20,7 @@ CSEG segment PUBLIC 'CODE'
   INCLUDE const.inc
 
   EXTRN DrawRectangle:NEAR
+  EXTRN DrawUnFilledRectangle:NEAR
 
   PUBLIC InitMouse
   PUBLIC MouseHandler
@@ -59,6 +61,7 @@ CSEG segment PUBLIC 'CODE'
       test [rectangle_draw], 1
       jnz @@draw_rectangle
 
+
       DrawPixel
       jmp @@exitf
 
@@ -81,7 +84,14 @@ CSEG segment PUBLIC 'CODE'
       jmp @@exitf
 
     @@draw_rectangle:
+      cmp [rectangle_fill], 1
+      jne @@draw_unfilled_rectangle
+
       call DrawRectangle
+      jmp @@exitf
+
+    @@draw_unfilled_rectangle:
+      call DrawUnFilledRectangle
       jmp @@exitf
 
   @@exitf:

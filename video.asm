@@ -16,6 +16,7 @@ CSEG segment PUBLIC 'CODE'
   PUBLIC SetVideoMode
   PUBLIC ClearScreen
   PUBLIC DrawRectangle
+  PUBLIC DrawUnFilledRectangle
 
   SetVideoMode proc NEAR
     mov ax, 13h
@@ -112,6 +113,63 @@ CSEG segment PUBLIC 'CODE'
       popa
       ret
   DrawRectangle endp
+
+  DrawUnFilledRectangle proc NEAR
+    pusha
+    mov ax, 0A000h
+    mov es, ax
+
+    mov ax, [current_y]
+    mov di, [current_x]
+    mov bx, ax
+
+    shl ax, 8
+    shl bx, 6
+    add bx, ax
+    add di, bx
+
+    @@DrawHorizontalLine:
+      push di
+      mov cx, [rectangle_w]
+      mov al, [current_color]
+      rep stosb
+
+      pop di
+      push di
+
+      mov ax, [rectangle_h]
+      dec ax
+      mov bx, ax
+      shl ax, 8
+      shl bx, 6
+      add bx, ax
+      add di, bx
+
+      mov cx, [rectangle_w]
+      mov al, [current_color]
+      rep stosb
+
+
+    @@DrawVerticalLine:
+      pop di
+
+      mov cx, [rectangle_h]
+      mov al, [current_color]
+
+      mov bx, [rectangle_w]
+      dec bx
+
+    @@DrawVertLoop:
+      mov es:[di], al
+      mov es:[bx+di], al
+
+      add di, 320
+      loop @@DrawVertLoop
+
+    mov [rectangle_draw], 0
+    popa
+    ret
+  DrawUnFilledRectangle endp
 
 CSEG ends
 end
