@@ -16,6 +16,9 @@ CSEG segment PUBLIC 'CODE'
 
   ClearScreen proc NEAR
     pusha
+    mov ax, 02h
+    int 33h
+
     mov ax, 0A000h
     mov es, ax
     xor di, di
@@ -32,6 +35,8 @@ CSEG segment PUBLIC 'CODE'
       dec dx
       jnz ClearRow
 
+    mov ax, 01h
+    int 33h
     popa 
     ret
 

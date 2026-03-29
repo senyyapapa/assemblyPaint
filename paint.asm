@@ -1,4 +1,5 @@
 .286
+JUMPS
 SSEG segment stack
   db 512 dup(0)
 SSEG ends
@@ -58,8 +59,32 @@ start:
 main_loop:
   mov ah, 01h
   int 16h
+  jz main_loop
+  
+  mov ah, 00h
+  int 16h
+
   cmp al, 1Bh
   je exit
+
+  cmp al, 63h
+  je @@clear_screen
+
+  cmp al, 43h
+  je @@clear_screen
+
+  cmp al, '1'
+  jb main_loop
+  cmp al, '9'
+  ja main_loop
+  sub al, '0'
+  xor ah, ah
+  mov [width_brush], ax
+
+  jmp main_loop
+
+@@clear_screen:
+  call ClearScreen
   jmp main_loop
 
 exit:

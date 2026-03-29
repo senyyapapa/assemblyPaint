@@ -57,7 +57,7 @@ CSEG segment
     mov al, TOOLBAR_COLOR
     mov dx, TOOLBAR_Y
 
-    NextLine:
+    @@NextLine:
       push bx
       push ax
       mov ax, dx
@@ -76,9 +76,11 @@ CSEG segment
       add dx, TOOLBAR_CELL_SIZE
 
       dec bx
-      jnz NextLine
-
-
+      jnz @@NextLine
+      ; jmp @@FillCell
+    
+    ; @@FillCell:
+    ;  
     popa
     ret
   DrawToolBar endp
