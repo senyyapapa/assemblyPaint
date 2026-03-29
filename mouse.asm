@@ -10,11 +10,15 @@ DSEG segment PUBLIC 'DATA'
 
   EXTRN width_brush:WORD
 
+  EXTRN rectangle_draw:BYTE
+
 DSEG ends
 CSEG segment PUBLIC 'CODE'
   assume cs:CSEG, ds:DSEG
   INCLUDE macros.inc
   INCLUDE const.inc
+
+  EXTRN DrawRectangle:NEAR
 
   PUBLIC InitMouse
   PUBLIC MouseHandler
@@ -51,15 +55,16 @@ CSEG segment PUBLIC 'CODE'
 
       mov [current_x], cx
       mov [current_y], dx
+
+      test [rectangle_draw], 1
+      jnz @@draw_rectangle
+
       DrawPixel
       jmp @@exitf
 
     @@RightClick:
       cmp cx, 260
       jb @@exitf
-
-      mov ax, 02h
-      int 33h
 
       mov ax, dx
       mov si, 320
@@ -73,6 +78,10 @@ CSEG segment PUBLIC 'CODE'
 
       mov ax, 01h
       int 33h
+      jmp @@exitf
+
+    @@draw_rectangle:
+      call DrawRectangle
       jmp @@exitf
 
   @@exitf:

@@ -15,9 +15,15 @@ DSEG segment PUBLIC 'DATA'
 
   width_brush dw 3
 
+  rectangle_w dw 100
+  rectangle_h dw 50
+  rectangle_fill db 1
+  rectangle_draw db 0
+
   PUBLIC current_x, current_y, current_color
   PUBLIC prev_x, prev_y, is_pressed
   PUBLIC width_brush
+  PUBLIC rectangle_w, rectangle_h, rectangle_fill, rectangle_draw
 DSEG ends
 
 CSEG segment
@@ -73,6 +79,12 @@ main_loop:
   cmp al, 43h
   je @@clear_screen
 
+  cmp al, 50h
+  je @@draw_rectangle
+
+  cmp al, 70h
+  je @@draw_rectangle
+
   cmp al, '1'
   jb main_loop
   cmp al, '9'
@@ -85,6 +97,13 @@ main_loop:
 
 @@clear_screen:
   call ClearScreen
+  jmp main_loop
+  
+@@draw_rectangle:
+  test [rectangle_draw], 1
+  jnz main_loop
+
+  mov [rectangle_draw], 1 
   jmp main_loop
 
 exit:
