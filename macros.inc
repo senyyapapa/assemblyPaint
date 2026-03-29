@@ -32,6 +32,7 @@ endm
 
 DrawPixel macro
   pusha
+
   mov ax, 0A000h
   mov es, ax
 
@@ -44,7 +45,40 @@ DrawPixel macro
   add bx, ax
   add di, bx
   mov al, [current_color]
-  mov es:[di], al
+  mov dx, [width_brush]
+
+  DrawRow:
+    mov cx, [width_brush]
+    rep stosb
+
+    add di, 320
+    sub di, [width_brush]
+
+    dec dx
+    jne DrawRow
+
   popa
 endm
 
+DrawToolbarBorder macro
+  LOCAL DrawVertLine
+  pusha
+
+  mov ax, 0A000h
+  mov es, ax
+
+  mov ax, TOOLBAR_Y
+  mov bx, 320
+  mul bx
+  add ax, TOOLBAR_BORDER_X
+  mov di, ax
+
+  mov cx, TOOLBAR_H
+  mov al, TOOLBAR_COLOR
+
+  DrawVertLine:
+    mov es:[di], al
+    add di, 320
+    loop DrawVertLine
+  popa
+endm

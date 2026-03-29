@@ -8,6 +8,8 @@ DSEG segment PUBLIC 'DATA'
   EXTRN prev_y:WORD 
   EXTRN is_pressed:BYTE
 
+  EXTRN width_brush:WORD
+
 DSEG ends
 CSEG segment PUBLIC 'CODE'
   assume cs:CSEG, ds:DSEG
@@ -25,6 +27,9 @@ CSEG segment PUBLIC 'CODE'
 
   MouseHandler proc FAR
     push ds
+    mov ax, 02h
+    int 33h
+
     mov ax, DSEG
     mov ds, ax
     pusha
@@ -71,6 +76,8 @@ CSEG segment PUBLIC 'CODE'
       jmp @@exitf
 
   @@exitf:
+    mov ax, 01h
+    int 33h
     popa
     pop ds
     retf

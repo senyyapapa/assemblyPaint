@@ -12,8 +12,11 @@ DSEG segment PUBLIC 'DATA'
   prev_y dw 0
   is_pressed db 0
 
+  width_brush dw 3
+
   PUBLIC current_x, current_y, current_color
   PUBLIC prev_x, prev_y, is_pressed
+  PUBLIC width_brush
 DSEG ends
 
 CSEG segment
@@ -28,6 +31,7 @@ CSEG segment
   EXTRN ClearScreen:NEAR
   EXTRN DrawPalette:NEAR
   EXTRN MouseHandler:FAR
+  EXTRN DrawToolBar:NEAR
 
 start: 
   mov ax, DSEG
@@ -41,6 +45,8 @@ start:
   call SetVideoMode
   call ClearScreen
   DrawPaletteBorder
+  DrawToolbarBorder
+  call DrawToolBar
   call DrawPalette
 
   ; Show cursor
