@@ -53,8 +53,6 @@ start:
   call SetVideoMode
   call ClearScreen
   DrawPaletteBorder
-  DrawToolbarBorder
-  call DrawToolBar
   call DrawPalette
 
   ; Show cursor
